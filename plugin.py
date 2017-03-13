@@ -20,18 +20,22 @@ class Surfraw(callbacks.Plugin):
     """
 
     # These parameters are per-channel parameters
-    browser = self.registryValue('browser')
+    self.browser = None
 
     def surfraw(self, irc, msg, args):
         """
         call surfraw with the appropriate arguments
         """
 
+        if not self.browser:
+            self.browser = self.registryValue('browser')
+
+
         currentChannel = msg.args[0]
 
         if irc.isChannel(currentChannel):
             thiscommand = "surfraw -browser={browser} {query}".format(
-                    browser=self.browser, msg.args[1]);
+                    browser=self.browser, query=msg.args[1]);
             proc = subprocess.Popen(shlex.split(thiscommand),
                     stdout=subprocess.PIPE)
 
